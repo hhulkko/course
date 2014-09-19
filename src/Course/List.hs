@@ -220,17 +220,14 @@ seqOptional = foldRight (\x xs ->
 -- >>> find even (1 :. 2 :. 3 :. 5 :. Nil)
 -- Full 2
 --
--- >>> find even (1 :. 2 :. 3 :. 4 :. 5 :. Nil)
+-- >>> find even (1 :. 2 :. 3 :. 4 :. 5 :. 6 :. Nil)
 -- Full 2
 --
 -- >>> find (const True) infinity
 -- Full 0
-find ::
-  (a -> Bool)
-  -> List a
-  -> Optional a
-find =
-  error "todo"
+find :: (a -> Bool) -> List a -> Optional a
+find _ Nil = Empty
+find p (x :. xs) = if p x then Full x else find p xs
 
 -- | Determine if the length of the given list is greater than 4.
 --
@@ -245,11 +242,10 @@ find =
 --
 -- >>> lengthGT4 infinity
 -- True
-lengthGT4 ::
-  List a
-  -> Bool
-lengthGT4 =
-  error "todo"
+lengthGT4 :: List a -> Bool
+lengthGT4 xs =
+  let l = length $ take 5 xs
+  in l == 5
 
 -- | Reverse a list.
 --
@@ -262,11 +258,8 @@ lengthGT4 =
 -- prop> let types = x :: List Int in reverse x ++ reverse y == reverse (y ++ x)
 --
 -- prop> let types = x :: Int in reverse (x :. Nil) == x :. Nil
-reverse ::
-  List a
-  -> List a
-reverse =
-  error "todo"
+reverse :: List a -> List a
+reverse = foldLeft (\xs x -> x :. xs) Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
@@ -276,12 +269,10 @@ reverse =
 --
 -- >>> let (x:.y:.z:.w:._) = produce (*2) 1 in [x,y,z,w]
 -- [1,2,4,8]
-produce ::
-  (a -> a)
-  -> a
-  -> List a
-produce =
-  error "todo"
+produce :: (a -> a) -> a -> List a
+produce f a =
+  let run x = x :. run (f x)
+  in run a
 
 -- | Do anything other than reverse a list.
 -- Is it even possible?
@@ -292,11 +283,8 @@ produce =
 -- prop> let types = x :: List Int in notReverse x ++ notReverse y == notReverse (y ++ x)
 --
 -- prop> let types = x :: Int in notReverse (x :. Nil) == x :. Nil
-notReverse ::
-  List a
-  -> List a
-notReverse =
-  error "todo"
+notReverse :: List a -> List a
+notReverse = error "Couldn't do it"
 
 largeList ::
   List Int
