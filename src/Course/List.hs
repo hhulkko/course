@@ -284,7 +284,7 @@ produce f a =
 --
 -- prop> let types = x :: Int in notReverse (x :. Nil) == x :. Nil
 notReverse :: List a -> List a
-notReverse = error "Couldn't do it"
+notReverse = reverse
 
 largeList ::
   List Int
