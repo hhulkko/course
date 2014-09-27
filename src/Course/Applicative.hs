@@ -38,48 +38,35 @@ class Apply f => Applicative f where
   (a -> b)
   -> f a
   -> f b
-(<$>) =
-  error "todo"
+(<$>) f fa = (pure f) <*> fa
 
 -- | Insert into Id.
 --
 -- prop> pure x == Id x
 instance Applicative Id where
-  pure ::
-    a
-    -> Id a
-  pure =
-    error "todo"
+  pure :: a -> Id a
+  pure = Id
 
 -- | Insert into a List.
 --
 -- prop> pure x == x :. Nil
 instance Applicative List where
-  pure ::
-    a
-    -> List a
-  pure =
-    error "todo"
+  pure :: a -> List a
+  pure a = a :. Nil
 
 -- | Insert into an Optional.
 --
 -- prop> pure x == Full x
 instance Applicative Optional where
-  pure ::
-    a
-    -> Optional a
-  pure =
-    error "todo"
+  pure :: a -> Optional a
+  pure = Full
 
 -- | Insert into a constant function.
 --
 -- prop> pure x y == x
 instance Applicative ((->) t) where
-  pure ::
-    a
-    -> ((->) t a)
-  pure =
-    error "todo"
+  pure :: a -> ((->) t a)
+  pure a = \_ -> a
 
 -- | Sequences a list of structures to a structure of list.
 --
@@ -97,12 +84,9 @@ instance Applicative ((->) t) where
 --
 -- >>> sequence ((*10) :. (+2) :. Nil) 6
 -- [60,8]
-sequence ::
-  Applicative f =>
-  List (f a)
-  -> f (List a)
-sequence =
-  error "todo"
+sequence :: Applicative f => List (f a) -> f (List a)
+sequence = foldRight (\as bs -> (:.) <$> as <*> bs) (pure Nil)
+-- let sequence_ as bs = ((\a b -> a:.b:.Nil) <$> as) <*> bs
 
 -- | Replicate an effect a given number of times.
 --
@@ -120,11 +104,7 @@ sequence =
 --
 -- >>> replicateA 3 ['a', 'b', 'c']
 -- ["aaa","aab","aac","aba","abb","abc","aca","acb","acc","baa","bab","bac","bba","bbb","bbc","bca","bcb","bcc","caa","cab","cac","cba","cbb","cbc","cca","ccb","ccc"]
-replicateA ::
-  Applicative f =>
-  Int
-  -> f a
-  -> f (List a)
+replicateA :: Applicative f => Int -> f a -> f (List a)
 replicateA =
   error "todo"
 
